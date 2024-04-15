@@ -35,240 +35,175 @@
 </p>
 
 
-> 基于Aho–Corasick算法实现的敏感词过滤方案，Aho–Corasick算法是由Alfred V. Aho和Margaret J.Corasick 发明的字符串搜索算法，用于在输入的一串字符串中匹配有限组“字典”中的子串。它与普通字符串匹配的不同点在于同时与所有字典串进行匹配。算法均摊情况下具有近似于线性的时间复杂度，约为字符串的长度加所有匹配的数量。
-
-实现详细说明（搜索算法未更新，请查看代码）：
-
-个人博客：[《TypeScript：Aho–Corasick算法实现敏感词过滤》](https://zhelin.me/post/47627553bd09576fbdeafc11dc93bfbf/)
-
-掘金社区：[《TypeScript：Aho–Corasick算法实现敏感词过滤》](https://juejin.im/post/5cfa6bb6f265da1b8a4f0ed8)
+> Sensitive word filtering scheme based on the Aho–Corasick algorithm. The Aho–Corasick algorithm is a string search algorithm invented by Alfred V. Aho and Margaret J.Corasick. It is used to match a limited set of "dictionaries" in an input string. " substring in ". It differs from ordinary string matching in that it matches all dictionary strings at the same time. The algorithm has an approximately linear time complexity when amortized, which is approximately the length of the string plus the number of all matches.
 
 ### 🏠 [Homepage](https://github.com/ZhelinCheng/mint-filter#readme)
 
-## 1. 性能
 
-### 运行性能
-
-**需要注意的是，实际生产环境运行速度会比下面测试数据更快。**
-
-使用20000个随机敏感词实例化的平均时间：< 96ms
-
-测试字符串包含随机生成的汉字、字母、数字。
-以下测试均在20000个随机敏感词构建的树下进行测试，每组测试6次取平均值：
-
-| 编号         | 字符串长度        |  不替换敏感词[replace:false]  | 替换敏感词 |
-| :--------:   | :-----:          | :----:        | :----:    |
-| 1            | 1000             |   < 1.35ms     | < 1.55ms   |
-| 2            | 5000             |   < 3.60ms     | < 3.60ms   |
-| 3            | 10000            |   < 8.10ms     | < 9.81ms   |
-| 4            | 20000            |   < 15.03ms    | < 16.03ms  |
-| 5            | 50000            |   < 20.83ms    | < 21.18ms  |
-| 6            | 100000           |   < 29.02ms    | < 34.45ms  |
-
-### 与DFA算法对比
-
-|         | Aho-Corasick算法 | DFA算法 |
-|---------|----------------|--------|
-| 算法效率 | 多模式串时表现良好 | 单模式串时表现良好 |
-| 内存占用 | 需要更多内存空间 | 内存消耗小 |
-| 匹配速度 | 非常快，具有线性时间复杂度 | 常量时间复杂度，匹配速度受限于自动机大小 |
-| 实现难度 | 较为复杂，需要构建AC自动机并进行状态转移 | 实现简单，只需维护一个大的状态转移表 |
-| 匹配多个字符串 | 高效，可同时搜索多个模式字符串 | 必须为每个字符串单独执行匹配操作 |
-| 错误容错性 | 良好 | 不太好 |
-
-
-
-## 2. 安装
+## 1. Install
 
 ```sh
 yarn add mint-filter
 ```
 
-## 3. 使用
 
-### CommonJS导入
+
+## 2. Use
+
+### CommonJS Import
 ```javascript
 const { Mint } = require('mint-filter')
 ```
 
-### TypeScript / ES Module引用
+### TypeScript / ES Module Reference
 
 ```typescript
 import Mint from 'mint-filter'
-const mint = new Mint(['敏感词数组'])
+const mint = new Mint(['/n', 'text'])
 
-// 基本使用
-mint.filter('需要验证的文本')
+// Basic use
+mint.filter(`
+Text to be checked.`)
 ```
 
-## 4. 构造函数
-### constructor
 
-• **new Mint**(`keys`)
 
-#### 参数
+## 3. Constructor
+
+• **new Mint**(`Keys to be check.`)
+
+#### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `keys` | `string`[] |
+| `Keys to be check.` | `string`[] |
 
-#### 定义于
+#### Define on
 
 [index.ts:26](https://github.com/ZhelinCheng/mint-filter/blob/f25e001/src/index.ts#L26)
 
-## 5. 方法
 
-### add
+
+## 4.Methods (Functions)
+
+### Add key word
 
 ▸ **add**(`key`, `build?`): `boolean`
-
-新增敏感词
 
 **`Example`**
 
 ```typescript
-const status = mint.add('敏感词')
+const status = mint.add('Text')
 ```
 
-#### 参数
+#### Parameters
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `key` | `string` | `undefined` | 关键词 |
-| `build` | `boolean` | `true` | 是否构建树，默认不用传递 |
+| `key` | `string` | `undefined` | Key word |
+| `build` | `boolean` | `true` | Whether to build a tree, no need to pass by default |
 
-#### 返回
+#### Returns
 
-`boolean`
+`boolean` (status)
 
-状态
-
-#### 定义于
+#### Define on
 
 [index.ts:233](https://github.com/ZhelinCheng/mint-filter/blob/f25e001/src/index.ts#L233)
 
 ___
 
-### delete
+### Delete key word
 
 ▸ **delete**(`key`): ``"update"`` \| ``"delete"``
-
-删除关键字
 
 **`Example`**
 
 ```typescript
-const status = mint.delete('敏感词')
+const status = mint.delete('key')
 ```
 
-#### 参数
+#### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `key` | `string` | 关键词 |
+| `key` | `string` | Key word |
 
-#### 返回
+#### Returns
 
 ``"update"`` \| ``"delete"``
 
-状态（update ｜ delete），告知用户是删除了树上的节点还是单纯的更新了节点
+Status (update | delete), informs the user whether the node in the tree has been deleted or simply updated.
 
-#### 定义于
+#### Define on
 
 [index.ts:169](https://github.com/ZhelinCheng/mint-filter/blob/f25e001/src/index.ts#L169)
 
 ___
 
-### filter
+### Filter text
 
 ▸ **filter**(`text`, `options?`): `FilterData`
-
-过滤文本
 
 **`Example`**
 
 ```typescript
-mint.add('无法通过')
-let status = mint.filter('这是一句无法通过的文本')
-console.log(status) // { words: ["无法通过"], text: "这是一句****的文本" }
+mint.add('unpassable')
+let status = mint.filter('An unpassable text.')
+console.log(status) // { words: ["unpassable"], text: "An ********** text." }
 
-status = mint.filter('这是一句无法通过的文本', { replace: false })
-console.log(status) // { words: ["无法通过"], text: "这是一句无法通过的文本" }
+status = mint.filter('An unpassable text.', { replace: false })
+console.log(status) // { words: ["unpassable"], text: "An unpassable text." }
 ```
 
-#### 参数
+#### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `text` | `string` | 文本内容 |
+| `text` | `string` | Text content |
 | `options?` | `Pick`<`FilterOptions`, ``"replace"``\> | - |
 
-#### 返回
+#### Returns
 
 `FilterData`
 
-FilterData
-
-#### 定义于
+#### Define on
 
 [index.ts:134](https://github.com/ZhelinCheng/mint-filter/blob/f25e001/src/index.ts#L134)
 
 ___
 
-### verify
+### Check whether the text passes validation
 
 ▸ **verify**(`text`): `boolean`
 
-检测文本是否通过验证
 
 **`Example`**
 
 ```typescript
-mint.add('无法通过')
-const status = mint.verify('这是一句无法通过的文本')
+mint.add('unpassable')
+const status = mint.verify('An unpassable text.')
 console.log(status) // false
 ```
 
-#### 参数
+#### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `text` | `string` | 文本内容 |
+| `text` | `string` | Text content |
 
-#### 返回
+#### Returns
 
 `boolean`
 
-Boolean
-
-#### 定义于
+#### Define on
 
 [index.ts:152](https://github.com/ZhelinCheng/mint-filter/blob/f25e001/src/index.ts#L152)
 
 
 
-## 6. 测试
+## 5. Test script
 
 ```sh
 yarn run test
 ```
-
-## 7. 作者
-
-👤 **ZhelinCheng**
-
-* Website: https://zhelin.me
-* Github: [@ZhelinCheng](https://github.com/ZhelinCheng)
-
-### 🤝 Contributing
-
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/ZhelinCheng/mint-filter/issues). You can also take a look at the [contributing guide](https://github.com/ZhelinCheng/mint-filter/blob/master/CONTRIBUTING.md).
-
-### Show your support
-
-Give a ⭐️ if this project helped you!
-
-### 📝 License
-
-Copyright © 2023 [ZhelinCheng](https://github.com/ZhelinCheng).<br />
-This project is [MIT](https://github.com/ZhelinCheng/mint-filter/blob/master/LICENSE) licensed.
