@@ -37,7 +37,6 @@
 
 > Sensitive word filtering scheme based on the Aho–Corasick algorithm. The Aho–Corasick algorithm is a string search algorithm invented by Alfred V. Aho and Margaret J.Corasick. It is used to match a limited set of "dictionaries" in an input string. " substring in ". It differs from ordinary string matching in that it matches all dictionary strings at the same time. The algorithm has an approximately linear time complexity when amortized, which is approximately the length of the string plus the number of all matches.
 
-### 🏠 [Homepage](https://github.com/ZhelinCheng/mint-filter#readme)
 
 
 ## 1. Install
@@ -207,3 +206,5 @@ console.log(status) // false
 ```sh
 yarn run test
 ```
+
+### 🏠 [Home page of the original code repository](https://github.com/ZhelinCheng/mint-filter#readme)
