@@ -207,4 +207,3 @@ console.log(status) // false
 yarn run test
 ```
 
-### 🏠 [Home page of the original code repository](https://github.com/ZhelinCheng/mint-filter#readme)
